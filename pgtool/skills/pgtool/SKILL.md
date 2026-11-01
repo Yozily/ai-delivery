@@ -3,7 +3,7 @@ name: pgtool
 description: PgTool 产品测试工具链的使用知识与操作规程。用于协助测试员和生产工程师：了解当前产线环境与工单、阅读测试流程、判断流程是否已部署上线、诊断测试失败、排查测试记录同步失败、提出流程修改建议、检查启动测试的前提。用户提到 PgTool、产测、测试流程、工位、测试失败、记录同步、部署时使用。
 metadata:
   product: PgTool
-  product-version: next
+  product-version: "v3.0.1 之后的开发构建"
   observed-at: "2026-11-01"
   access: read-only
 ---

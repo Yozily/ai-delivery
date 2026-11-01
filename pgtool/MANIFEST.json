@@ -1,11 +1,11 @@
 {
   "product": "pgtool",
-  "version": "next-preview",
-  "status": "released",
+  "version": "current",
+  "status": "preview",
   "productName": "PgTool",
   "productVersion": "v3.0.1 之后的开发构建（未发版）",
   "sourceRepo": "wac-pgtool",
-  "sourceCommit": "d965566c839b2c24b42b4a34c95c249ff9a63bd8",
+  "sourceCommit": "b2de477d4e1f12112e6269958289b726e2dba985",
   "releasedAt": "2026-11-02",
   "compat": [
     "generic"

@@ -2,31 +2,37 @@
 
 面向维护本仓的人。客户不需要读这一页。
 
-## 前提
+## 目录约定
 
-- 产品已发版（或已发预览版），有确定的产品版本号。
-- 产品仓 `delivery/<产品线>/<版本>/` 已按该版本整理并提交。
+- `<产品线>/`：当前版本，滚动更新。安装地址固定，客户更新后重新安装即可。
+- `<产品线>/releases/<X.Y.Z>/`：产品正式发版时的快照，生成后不再修改，供使用旧版本产品的客户安装。
+- 版本历史由 Git 记录；`releases/` 只为方便按产品版本查找。
 
-## 步骤
+## 更新当前版本
 
-1. 在产品仓确认要发布的提交号。
-2. 在本仓根目录生成副本：
+1. 产品仓 `delivery/<产品线>/` 的改动已提交，记下提交号。
+2. 在本仓根目录：
 
    ```
    python3 _shared/tools/publish.py --source <产品仓路径> --product <产品线> \
-       --version <版本> --product-version <产品版本> --commit <提交号>
+       --product-version "<内容对应的产品版本>" --commit <提交号>
    ```
 
-   工具从该提交取内容（不取工作区），填写 `MANIFEST.json` 的版本、来源提交与日期；目标目录已存在时拒绝执行。
+   工具从该提交取内容（不取工作区），替换 `<产品线>/` 下的内容文件，保留 `README.md` 与 `releases/`，并填写 `MANIFEST.json` 的来源提交与日期。
+3. 能力或适用范围有变化时，更新 `<产品线>/README.md` 与 `INDEX.md`。
+4. 运行 `python3 _shared/tools/validate.py`，必须通过。
+5. 路径限定提交并推送。
 
-   预览版：产品尚未发版、资产已通过代理验证时，可用 `--version next --as next-preview` 发布到 `<产品线>/next-preview/`，`INDEX.md` 单列于「预览」表并注明未经完整黑盒验收。每条产品线只有一个预览目录，滚动更新：修正时加 `--replace` 整目录重建，`MANIFEST.json` 的 `sourceCommit` 表明当前内容来源。正式版本目录发布后不再修改。正式发版后，预览目录改为 `superseded` 或用于下一版的预览。
-3. 按 `_shared/templates/version-README.md` 写 `<产品线>/<版本>/README.md`，填好可直接复制的一句话安装提示词。
-4. 更新 `INDEX.md`：加本版本行；被取代的旧版本改为 `superseded`（同时改该目录 `MANIFEST.json` 的 `status`）。
-5. 运行 `python3 _shared/tools/validate.py`，必须通过。
-6. 按 [self-check.md](self-check.md) 逐条确认不可机检的项。
-7. 路径限定提交并推送。
+## 产品发版时存快照
+
+1. 用产品发版提交（或标签）执行上面的命令，加 `--release <X.Y.Z>`，生成 `<产品线>/releases/<X.Y.Z>/`；已存在时拒绝执行。
+2. 为快照写 `README.md`（可参照 `_shared/templates/version-README.md`）。
+3. `INDEX.md` 加快照行；之前的快照改为 `superseded`（同时改其 `MANIFEST.json` 的 `status`）。
+4. 同时更新当前版本，`MANIFEST.json` 的 `status` 在完成黑盒验收后由 `preview` 改为 `released`。
+5. 校验、提交、推送。
 
 ## 修正与撤回
 
-- 已发布目录的内容文件不修改。发现问题时把 `status` 改为 `yanked`，在 `INDEX.md` 顶部公告，修复后开新版本目录。
+- 当前版本有问题：修正产品仓后重新发布即可。
+- 快照有问题：快照内容不修改。把 `status` 改为 `yanked`，在 `INDEX.md` 顶部公告，并说明替代版本。
 - 发现资产与产品实际行为不一致：回报产品侧修正权威源，不在本仓改内容。

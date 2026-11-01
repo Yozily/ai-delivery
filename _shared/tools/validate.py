@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""发布仓校验：按《对外AI交付资产规范》§4、§6 检查每个 <产品线>/<版本>/ 目录。
+"""发布仓校验：按《对外AI交付资产规范》§4、§6 检查每条产品线的当前版本
+<产品线>/ 与历史快照 <产品线>/releases/<版本>/。
 
 用法（在发布仓根目录）：
-  python3 _shared/tools/validate.py            # 校验全部版本目录
-  python3 _shared/tools/validate.py pgtool/3.1.0   # 只校验指定目录
+  python3 _shared/tools/validate.py                      # 校验全部
+  python3 _shared/tools/validate.py pgtool/releases/3.1.0   # 只校验指定目录
 退出码 0 表示通过，1 表示有错误。只用 Python 标准库。
 """
 import json
@@ -15,7 +16,8 @@ ROOT = Path(__file__).resolve().parents[2]
 SKIP_TOP = {"_shared", ".git", ".github"}
 REQUIRED = ["product", "version", "status", "productVersion", "sourceRepo",
             "sourceCommit", "releasedAt", "compat", "assets"]
-STATUSES = {"released", "superseded", "yanked"}
+CURRENT_STATUSES = {"preview", "released"}
+RELEASE_STATUSES = {"released", "superseded", "yanked"}
 ASSET_KINDS = ["skills", "mcp", "prompts", "docs"]
 TEXT_SUFFIXES = {".md", ".json", ".txt", ".yaml", ".yml"}
 NAME_RE = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
@@ -74,8 +76,19 @@ def check_skill(skill_dir, rep, where):
         rep.err(where, f"{md.relative_to(ROOT)}: description 长度应为 1–1024")
 
 
+def own_files(vdir, pattern="*"):
+    for f in vdir.rglob(pattern):
+        if is_current(vdir) and (vdir / "releases") in f.parents:
+            continue
+        yield f
+
+
+def is_current(vdir):
+    return vdir.parent.name != "releases"
+
+
 def check_links(vdir, rep, where):
-    for f in vdir.rglob("*.md"):
+    for f in own_files(vdir, "*.md"):
         text = f.read_text(encoding="utf-8")
         for target in LINK_RE.findall(text):
             if re.match(r"^[a-z]+://", target) or target.startswith("#") or target.startswith("mailto:"):
@@ -87,14 +100,14 @@ def check_links(vdir, rep, where):
             try:
                 resolved.relative_to(vdir.resolve())
             except ValueError:
-                rep.err(where, f"{f.relative_to(ROOT)}: 链接越出版本目录：{target}")
+                rep.err(where, f"{f.relative_to(ROOT)}: 链接越出所在目录：{target}")
                 continue
             if not resolved.exists():
                 rep.err(where, f"{f.relative_to(ROOT)}: 链接无法解析：{target}")
 
 
 def check_banned(vdir, rep, where):
-    for f in vdir.rglob("*"):
+    for f in own_files(vdir):
         if not f.is_file() or f.suffix not in TEXT_SUFFIXES:
             continue
         for lineno, line in enumerate(f.read_text(encoding="utf-8").splitlines(), 1):
@@ -164,12 +177,16 @@ def check_version(vdir, rep, index_text):
     for key in REQUIRED:
         if manifest.get(key) in (None, "", []):
             rep.err(where, f"MANIFEST.{key} 缺失或为空")
-    if manifest.get("product") != vdir.parent.name:
+    current = is_current(vdir)
+    product = vdir.name if current else vdir.parent.parent.name
+    version = "current" if current else vdir.name
+    statuses = CURRENT_STATUSES if current else RELEASE_STATUSES
+    if manifest.get("product") != product:
         rep.err(where, "MANIFEST.product 与产品线目录名不一致")
-    if manifest.get("version") != vdir.name:
-        rep.err(where, "MANIFEST.version 与版本目录名不一致")
-    if manifest.get("status") not in STATUSES:
-        rep.err(where, f"MANIFEST.status 应为 {sorted(STATUSES)}")
+    if manifest.get("version") != version:
+        rep.err(where, f"MANIFEST.version 应为「{version}」")
+    if manifest.get("status") not in statuses:
+        rep.err(where, f"MANIFEST.status 应为 {sorted(statuses)}")
     if not re.fullmatch(r"[0-9a-f]{40}", str(manifest.get("sourceCommit", ""))):
         rep.err(where, "MANIFEST.sourceCommit 应为 40 位提交号")
     if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(manifest.get("releasedAt", ""))):
@@ -180,7 +197,7 @@ def check_version(vdir, rep, index_text):
     check_readme(vdir, rep, where)
     check_links(vdir, rep, where)
     check_banned(vdir, rep, where)
-    row = re.search(r"^\|\s*" + re.escape(vdir.parent.name) + r"\s*\|\s*" + re.escape(vdir.name) + r"\s*\|\s*([a-z]+)\s*\|", index_text, re.M)
+    row = re.search(r"^\|\s*" + re.escape(product) + r"\s*\|\s*" + re.escape(version) + r"\s*\|\s*([a-z]+)\s*\|", index_text, re.M)
     if not row:
         rep.err(where, "INDEX.md 中没有本版本的行")
     elif row.group(1) != manifest.get("status"):
@@ -193,7 +210,10 @@ def version_dirs(args):
     dirs = []
     for prod in sorted(ROOT.iterdir()):
         if prod.is_dir() and prod.name not in SKIP_TOP and not prod.name.startswith("."):
-            dirs.extend(sorted(d for d in prod.iterdir() if d.is_dir()))
+            dirs.append(prod)
+            rel = prod / "releases"
+            if rel.is_dir():
+                dirs.extend(sorted(d for d in rel.iterdir() if d.is_dir()))
     return dirs
 
 
@@ -213,7 +233,7 @@ def main():
         for e in rep.errors:
             print(f"  - {e}")
         return 1
-    print(f"校验通过：{len(dirs)} 个版本目录")
+    print(f"校验通过：{len(dirs)} 个目录（当前版本与快照）")
     return 0
 
 

@@ -1,7 +1,7 @@
 # <产品名> <版本>
 
 <!--
-模板：复制到 <产品线>/<版本>/README.md 后填写。
+模板：复制到 <产品线>/README.md（当前版本）或 <产品线>/releases/<版本>/README.md（快照）后填写。
 本文件属发布仓自身内容，可由 AI FDE 直接维护；其余内容文件必须从产品仓生成。
 删除本段注释后再发布。
 -->
@@ -13,7 +13,7 @@
 把下面这段发给你的 AI：
 
 ```
-拉取 https://github.com/Yozily/ai-delivery 的 <产品线>/<版本> 目录，
+拉取 https://github.com/Yozily/ai-delivery 的 <产品线 或 产品线/releases/版本> 目录，
 安装其中的 skills/<技能名>，
 然后阅读该目录下的 README、docs 与 references，告诉我你能用它做什么、有哪些操作是不允许的。
 ```

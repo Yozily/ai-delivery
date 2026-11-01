@@ -1,0 +1,33 @@
+{
+  "product": "pgtool",
+  "version": "next-preview",
+  "status": "released",
+  "productName": "PgTool",
+  "productVersion": "v3.0.1 之后的开发构建（未发版）",
+  "sourceRepo": "wac-pgtool",
+  "sourceCommit": "b81776d583efe48d8cfceecb59fa288958bf9d7d",
+  "releasedAt": "2026-11-02",
+  "compat": [
+    "generic"
+  ],
+  "assets": {
+    "skills": [
+      {
+        "name": "pgtool",
+        "path": "skills/pgtool/SKILL.md",
+        "purpose": "了解 PgTool，读取环境、流程、部署、执行、记录与同步信息，协助诊断问题（只读）"
+      }
+    ],
+    "mcp": [],
+    "prompts": [],
+    "docs": [
+      {
+        "name": "connect",
+        "path": "docs/connect.md",
+        "purpose": "给 AI 配置只读 HTTP 工具与服务地址"
+      }
+    ]
+  },
+  "notes": "本版本只读；需要宿主提供 GET 请求能力。version、productVersion、sourceCommit、releasedAt 由发布流程填写。",
+  "generatedBy": "_shared/tools/publish.py"
+}

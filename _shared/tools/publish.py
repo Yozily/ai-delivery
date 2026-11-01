@@ -8,6 +8,7 @@
   python3 _shared/tools/publish.py \
       --source <产品仓路径> --product pgtool --version 3.1.0 \
       --product-version 3.1.0 [--commit <提交号，默认 HEAD>] [--released-at YYYY-MM-DD]
+      [--as <发布仓目录名，默认同 --version；预览版如 next-preview>]
 
 完成后还需：按 _shared/templates/version-README.md 写版本 README，更新 INDEX.md，
 再运行 _shared/tools/validate.py。只用 Python 标准库与 git。
@@ -37,6 +38,7 @@ def main():
     ap.add_argument("--product-version", required=True, help="对应的产品运行版本")
     ap.add_argument("--commit", default="HEAD")
     ap.add_argument("--released-at", default=datetime.date.today().isoformat())
+    ap.add_argument("--as", dest="target_name", help="发布仓中的版本目录名，默认与 --version 相同")
     a = ap.parse_args()
 
     src = Path(a.source).resolve()
@@ -48,7 +50,8 @@ def main():
     if dirty:
         print(f"提示：产品仓工作区中 {prefix}/ 有未提交改动，本次只发布提交 {commit[:9]} 中的内容。")
 
-    target = ROOT / a.product / a.version
+    target_name = a.target_name or a.version
+    target = ROOT / a.product / target_name
     if target.exists():
         sys.exit(f"目标已存在：{target.relative_to(ROOT)}。旧版本不覆盖；如需修正请开新版本目录。")
 
@@ -69,7 +72,7 @@ def main():
     manifest = json.loads(mf.read_text(encoding="utf-8")) if mf.is_file() else {}
     manifest.update({
         "product": a.product,
-        "version": a.version,
+        "version": target_name,
         "status": "released",
         "productVersion": a.product_version,
         "sourceRepo": src.name,
@@ -79,7 +82,7 @@ def main():
     })
     mf.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
-    print(f"已生成 {target.relative_to(ROOT)}/：{count} 个文件，来源 {src.name}@{commit[:9]}")
+    print(f"已生成 {target.relative_to(ROOT)}/：{count} 个文件，来源 {src.name}@{commit[:9]}:{prefix}/")
     print("下一步：写版本 README.md、更新 INDEX.md，然后运行 python3 _shared/tools/validate.py")
     return 0
 

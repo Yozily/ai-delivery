@@ -1,0 +1,27 @@
+# 本仓只存交付资产。以下都不入库。
+
+# 凭据与本地配置
+.env
+.env.*
+!*.env.example
+*.key
+*.pem
+*.p12
+*.pfx
+*.jks
+*.keystore
+
+# 依赖与构建产物
+node_modules/
+dist/
+build/
+*.tsbuildinfo
+
+# 系统与编辑器
+.DS_Store
+.idea/
+.vscode/
+
+# 本地草稿（未验证资产不发布，草稿留在产品仓，不放这里）
+_drafts/
+_scratch/

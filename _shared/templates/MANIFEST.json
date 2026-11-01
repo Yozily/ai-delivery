@@ -1,0 +1,31 @@
+{
+  "_comment": "模板：复制到 <产品线>/<版本>/MANIFEST.json 后按实际填写并删除本字段。字段含义见《对外AI交付资产规范》第 4 节。",
+  "product": "<产品线短名，与目录名一致，小写>",
+  "version": "<版本目录名，对应产品发布版本>",
+  "status": "released",
+  "productName": "<对客户显示的产品名>",
+  "productVersion": "<该版本对应的产品运行版本>",
+  "sourceRepo": "<产品仓名，例如 wac-pgtool>",
+  "sourceCommit": "<发布时产品仓的完整提交号>",
+  "releasedAt": "<YYYY-MM-DD>",
+  "compat": ["claude-code", "codex", "generic"],
+  "assets": {
+    "skills": [
+      {
+        "name": "<技能名>",
+        "path": "skills/<技能名>/SKILL.md",
+        "purpose": "<一句话用途>"
+      }
+    ],
+    "mcp": [],
+    "prompts": [],
+    "docs": [
+      {
+        "name": "<文档名>",
+        "path": "docs/<文件名>.md",
+        "purpose": "<一句话用途>"
+      }
+    ]
+  },
+  "notes": "<撤回条件、已知限制等；无则留空字符串>"
+}

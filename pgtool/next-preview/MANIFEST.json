@@ -1,7 +1,7 @@
 {
   "product": "pgtool",
   "version": "next-preview",
-  "status": "released",
+  "status": "superseded",
   "productName": "PgTool",
   "productVersion": "v3.0.1 之后的开发构建（未发版）",
   "sourceRepo": "wac-pgtool",

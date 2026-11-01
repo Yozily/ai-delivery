@@ -7,6 +7,7 @@
 
 <!-- 版本被撤回、能力范围变化、安装方式变更时在下方登记。无公告时写「暂无」。 -->
 
+- 2026-11-02　**PgTool**：发布 `next-preview-2`，技能直接使用 PgTool 固定本机地址，不再要求用户提供端口；`next-preview` 已取代。
 - 2026-11-02　**PgTool**：发布预览版 `next-preview`（只读 Skill），适用于 v3.0.1 之后的开发构建，未经完整黑盒验收，见下方「预览」表。正式版将随 PgTool 下一个产品版本发布。
 
 ## 产品清单
@@ -24,7 +25,8 @@
 
 | 产品线 | 版本 | 状态 | 适用产品版本 | 支持宿主 | 已交付形态 | 入口 |
 | --- | --- | --- | --- | --- | --- | --- |
-| pgtool | next-preview | released | v3.0.1 之后的开发构建（未发版） | generic | Skill（只读） | [README](pgtool/next-preview/README.md) |
+| pgtool | next-preview-2 | released | v3.0.1 之后的开发构建（未发版） | generic | Skill（只读） | [README](pgtool/next-preview-2/README.md) |
+| pgtool | next-preview | superseded | v3.0.1 之后的开发构建（未发版） | generic | Skill（只读） | [README](pgtool/next-preview/README.md) |
 
 ## 各列含义
 

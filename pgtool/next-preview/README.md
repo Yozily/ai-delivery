@@ -1,4 +1,6 @@
-# PgTool next-preview（预览）
+# PgTool next-preview（预览，已取代）
+
+> **已被 `pgtool/next-preview-2` 取代**，请改用新版本（见仓库根目录 INDEX.md）。本目录保留供已安装的用户回查。
 
 **预览版，未经完整黑盒验收。** 适用于 **PgTool v3.0.1 之后的开发构建**，不适用于 v3.0.1 正式版：v3.0.1 缺少本技能用到的接口。PgTool 下一个正式版本发布后，本目录将标为 `superseded`。
 

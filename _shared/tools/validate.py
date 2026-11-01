@@ -23,7 +23,6 @@ LINK_RE = re.compile(r"\[[^\]]*\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
 BANNED = [
     (re.compile(r"\.project/"), "引用内部设计目录 .project/"),
     (re.compile(r"\.agents/"), "引用内部开发目录 .agents/"),
-    (re.compile(r"\b127\.0\.0\.1\b|\blocalhost:\d+"), "本机地址"),
     (re.compile(r"\b10\.\d{1,3}\.\d{1,3}\.\d{1,3}\b"), "内网地址 10.x"),
     (re.compile(r"\b192\.168\.\d{1,3}\.\d{1,3}\b"), "内网地址 192.168.x"),
     (re.compile(r"\b172\.(1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3}\b"), "内网地址 172.16-31.x"),

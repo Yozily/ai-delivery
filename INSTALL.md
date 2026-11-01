@@ -7,7 +7,7 @@
 ```
 拉取 https://github.com/Yozily/ai-delivery 的 <产品线>/<版本> 目录，
 安装其中的 skills/ 到你的技能目录，
-然后阅读该目录下的 README 与 references，告诉我你能用它做什么、有哪些操作是不允许的。
+然后阅读该目录下的 README、docs 与 references，告诉我你能用它做什么、有哪些操作是不允许的。
 ```
 
 **为什么必须带版本号**：产品接口和工具名会随版本变化。装错版本时 AI 会按旧名字调用，看起来"调用成功"，结果却是错的。
@@ -18,6 +18,7 @@
 | --- | --- | --- |
 | Claude Code | `~/.claude/skills/`（个人）或 `<项目>/.claude/skills/`（项目内） | 把版本目录下的 `skills/<name>/` 整个复制进去 |
 | Codex | `~/.agents/skills/` 或项目内 `.agents/skills/` | 同上 |
+| Cherry Studio | 【设置】→【技能】→ 从文件夹或 ZIP 安装 | 选择版本目录下的 `skills/<name>/`；再在 Agent 的【技能】中启用 |
 | 通用 agent | 无固定目录 | 把 `skills/<name>/SKILL.md` 与 `references/` 一起提供给 agent，或直接把内容贴进对话 |
 
 ## 手动安装（三选一）
@@ -26,7 +27,11 @@
 
 **方式二：只读不改.** 把 `skills/<name>/` 放到任意位置，在对话里让 AI 先读 `SKILL.md`。SKILL.md 是自包含的，里面的相对链接指向同目录的 `references/`。
 
-**方式三：不用技能.** 每个版本目录还提供 `prompts/`，是可直接复制的提示词，不需要 agent 支持技能机制。
+**方式三：不用技能.** 若该版本提供 `prompts/`，可直接复制其中的提示词，不需要 agent 支持技能机制。是否提供以版本目录的 `MANIFEST.json` 为准。
+
+## 需要访问产品服务时
+
+部分技能需要读取你本地运行的产品服务。版本目录的 `docs/` 会说明需要什么工具（例如只读 HTTP 请求）和服务地址怎么获取。按说明配置后再提问。
 
 ## 只有 MCP 没有技能时
 

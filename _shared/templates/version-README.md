@@ -15,7 +15,7 @@
 ```
 拉取 https://github.com/Yozily/ai-delivery 的 <产品线>/<版本> 目录，
 安装其中的 skills/<技能名>，
-然后阅读该目录下的 README 与 references，告诉我你能用它做什么、有哪些操作是不允许的。
+然后阅读该目录下的 README、docs 与 references，告诉我你能用它做什么、有哪些操作是不允许的。
 ```
 
 ## 这套材料能做什么

@@ -2,13 +2,13 @@
 """从产品仓生成发布仓副本：《对外AI交付资产规范》§7 第 4 步。
 
 内容取自产品仓某个确定提交（git archive），不取工作区，保证副本可由 sourceCommit 复现。
-目标版本目录已存在时拒绝执行：旧版本不覆盖。
+目标版本目录已存在时拒绝执行：正式版本不覆盖。预览目录（名称以 -preview 结尾）是滚动的，加 --replace 可整目录重建。
 
 用法（在发布仓根目录）：
   python3 _shared/tools/publish.py \
       --source <产品仓路径> --product pgtool --version 3.1.0 \
       --product-version 3.1.0 [--commit <提交号，默认 HEAD>] [--released-at YYYY-MM-DD]
-      [--as <发布仓目录名，默认同 --version；预览版如 next-preview>]
+      [--as <发布仓目录名，默认同 --version；预览版如 next-preview>] [--replace（仅预览目录）]
 
 完成后还需：按 _shared/templates/version-README.md 写版本 README，更新 INDEX.md，
 再运行 _shared/tools/validate.py。只用 Python 标准库与 git。
@@ -19,6 +19,7 @@ import io
 import json
 import subprocess
 import sys
+import shutil
 import tarfile
 from pathlib import Path
 
@@ -39,6 +40,7 @@ def main():
     ap.add_argument("--commit", default="HEAD")
     ap.add_argument("--released-at", default=datetime.date.today().isoformat())
     ap.add_argument("--as", dest="target_name", help="发布仓中的版本目录名，默认与 --version 相同")
+    ap.add_argument("--replace", action="store_true", help="重建已存在的预览目录（仅限 -preview 结尾）")
     a = ap.parse_args()
 
     src = Path(a.source).resolve()
@@ -53,7 +55,12 @@ def main():
     target_name = a.target_name or a.version
     target = ROOT / a.product / target_name
     if target.exists():
-        sys.exit(f"目标已存在：{target.relative_to(ROOT)}。旧版本不覆盖；如需修正请开新版本目录。")
+        if not (a.replace and target_name.endswith("-preview")):
+            sys.exit(f"目标已存在：{target.relative_to(ROOT)}。正式版本不覆盖；如需修正请开新版本目录。预览目录可加 --replace 重建。")
+        old_readme = (target / "README.md").read_bytes() if (target / "README.md").is_file() else None
+        shutil.rmtree(target)
+    else:
+        old_readme = None
 
     data = git(src, "archive", "--format=tar", commit, prefix)
     target.mkdir(parents=True)
@@ -67,6 +74,9 @@ def main():
             out.parent.mkdir(parents=True, exist_ok=True)
             out.write_bytes(tar.extractfile(m).read())
             count += 1
+
+    if old_readme is not None:
+        (target / "README.md").write_bytes(old_readme)
 
     mf = target / "MANIFEST.json"
     manifest = json.loads(mf.read_text(encoding="utf-8")) if mf.is_file() else {}

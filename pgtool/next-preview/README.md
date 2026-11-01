@@ -1,8 +1,6 @@
-# PgTool next-preview（预览，已取代）
+# PgTool next-preview（预览）
 
-> **已被 `pgtool/next-preview-2` 取代**，请改用新版本（见仓库根目录 INDEX.md）。本目录保留供已安装的用户回查。
-
-**预览版，未经完整黑盒验收。** 适用于 **PgTool v3.0.1 之后的开发构建**，不适用于 v3.0.1 正式版：v3.0.1 缺少本技能用到的接口。PgTool 下一个正式版本发布后，本目录将标为 `superseded`。
+**预览版，未经完整黑盒验收。** 适用于 **PgTool v3.0.1 之后的开发构建**，不适用于 v3.0.1 正式版：v3.0.1 缺少本技能用到的接口。本目录是滚动预览：修正会直接更新这里，当前内容对应的产品仓提交见 [MANIFEST.json](MANIFEST.json) 的 `sourceCommit`。更新后请重新安装技能。PgTool 下一个正式版本发布后，将提供固定版本目录。
 
 ## 一句话安装
 
@@ -36,12 +34,12 @@
 
 ## 前提
 
-- 你的 PgTool 为 v3.0.1 之后的开发构建，桌面端正在运行。
-- 你的 AI 宿主能发 HTTP GET 请求（内置网页抓取、通用抓取类 MCP，或命令行工具），并知道 PgTool 服务地址。配置方法见 [docs/connect.md](docs/connect.md)。
-- PgTool 接口在本机提供，当前没有访问认证；不要把服务地址暴露到不受控的网络。
+- 你的 PgTool 为 v3.0.1 之后的开发构建，桌面端已启动。
+- 你的 AI 运行在装有 PgTool 的同一台电脑上，并能发 HTTP GET 请求（内置网页抓取、通用抓取类 MCP，或命令行工具）。不需要你提供地址或端口，详见 [docs/connect.md](docs/connect.md)。
+- PgTool 接口当前没有访问认证，不要把它的端口转发或暴露到其他网络。
 
 ## 版本与来源
 
-- 本目录由产品仓 `wac-pgtool` 在提交 `b81776d5` 生成，核对锚点见 [MANIFEST.json](MANIFEST.json)。
+- 本目录由产品仓 `wac-pgtool` 生成，当前来源提交见 [MANIFEST.json](MANIFEST.json)。
 - 上一版：无。
 - 本目录内容不在本仓手工修改。发现与产品实际行为不一致，请提 Issue。

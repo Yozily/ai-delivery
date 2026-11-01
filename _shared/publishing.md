@@ -19,7 +19,7 @@
 
    工具从该提交取内容（不取工作区），填写 `MANIFEST.json` 的版本、来源提交与日期；目标目录已存在时拒绝执行。
 
-   预览版：产品尚未发版、资产已通过代理验证时，可用 `--version next --as next-preview` 发布到 `<产品线>/next-preview/`，`INDEX.md` 单列于「预览」表并注明未经完整黑盒验收。预览需要修正时开新目录 `next-preview-N`（N 从 2 起），旧预览改为 `superseded`。正式发版后最后一个预览也改为 `superseded`。
+   预览版：产品尚未发版、资产已通过代理验证时，可用 `--version next --as next-preview` 发布到 `<产品线>/next-preview/`，`INDEX.md` 单列于「预览」表并注明未经完整黑盒验收。每条产品线只有一个预览目录，滚动更新：修正时加 `--replace` 整目录重建，`MANIFEST.json` 的 `sourceCommit` 表明当前内容来源。正式版本目录发布后不再修改。正式发版后，预览目录改为 `superseded` 或用于下一版的预览。
 3. 按 `_shared/templates/version-README.md` 写 `<产品线>/<版本>/README.md`，填好可直接复制的一句话安装提示词。
 4. 更新 `INDEX.md`：加本版本行；被取代的旧版本改为 `superseded`（同时改该目录 `MANIFEST.json` 的 `status`）。
 5. 运行 `python3 _shared/tools/validate.py`，必须通过。

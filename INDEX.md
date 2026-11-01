@@ -7,6 +7,7 @@
 
 <!-- 版本被撤回、能力范围变化、安装方式变更时在下方登记。无公告时写「暂无」。 -->
 
+- 2026-11-02　**PgTool**：改为工具包：`pgtool`（基础）＋ `pgtool-client`（客户端）。已安装旧版 `pgtool` 的请重新安装 `skills/` 下的全部技能。云后台技能暂未提供。
 - 2026-11-02　**PgTool**：上线只读 Skill，当前状态为预览，适用于 v3.0.1 之后的开发构建。
 
 ## 产品清单
@@ -15,7 +16,7 @@
 
 | 产品线 | 版本 | 状态 | 适用产品版本 | 支持宿主 | 已交付形态 | 入口 |
 | --- | --- | --- | --- | --- | --- | --- |
-| pgtool | current | preview | v3.0.1 之后的开发构建（未发版） | generic | Skill（只读） | [README](pgtool/README.md) |
+| pgtool | current | preview | v3.0.1 之后的开发构建（未发版） | generic | Skill 工具包（只读）：pgtool、pgtool-client | [README](pgtool/README.md) |
 
 「版本」列：`current` 指 `<产品线>/` 下的当前版本；其余为 `<产品线>/releases/<版本>/` 下的快照。
 

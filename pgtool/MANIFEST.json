@@ -3,9 +3,9 @@
   "version": "current",
   "status": "preview",
   "productName": "PgTool",
-  "productVersion": "v3.0.1 之后的开发构建（未发版）",
+  "productVersion": "v3.0.1 之后的开发构建",
   "sourceRepo": "wac-pgtool",
-  "sourceCommit": "b2de477d4e1f12112e6269958289b726e2dba985",
+  "sourceCommit": "90cb263d3c514cc504d7401e96189153fc9ea26d",
   "releasedAt": "2026-11-02",
   "compat": [
     "generic"
@@ -15,7 +15,12 @@
       {
         "name": "pgtool",
         "path": "skills/pgtool/SKILL.md",
-        "purpose": "了解 PgTool，读取环境、流程、部署、执行、记录与同步信息，协助诊断问题（只读）"
+        "purpose": "基础与导航：PgTool 是什么、客户端与云后台各管什么、对象区别、通用规则，以及该用哪个技能（不调用接口）"
+      },
+      {
+        "name": "pgtool-client",
+        "path": "skills/pgtool-client/SKILL.md",
+        "purpose": "客户端（桌面产测端）只读查询与诊断：环境与工单、流程、部署、执行与失败原因、本机记录、同步队列"
       }
     ],
     "mcp": [],
@@ -24,10 +29,10 @@
       {
         "name": "connect",
         "path": "docs/connect.md",
-        "purpose": "连接前提、服务地址与只读 HTTP 工具配置"
+        "purpose": "安装方式、连接前提、服务地址与只读 HTTP 工具配置"
       }
     ]
   },
-  "notes": "本版本只读；AI 需运行在装有 PgTool 的同一台电脑上，并具备 GET 请求能力。",
+  "notes": "工具包：skills/ 下的技能需一起安装，pgtool 为基础技能。本版本只读；云后台技能暂未提供。使用 pgtool-client 时，AI 需运行在装有 PgTool 的同一台电脑上，并具备 GET 请求能力。",
   "generatedBy": "_shared/tools/publish.py"
 }

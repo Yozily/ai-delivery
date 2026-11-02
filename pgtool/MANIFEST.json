@@ -5,7 +5,7 @@
   "productName": "PgTool",
   "productVersion": "v3.0.1 之后的开发构建",
   "sourceRepo": "wac-pgtool",
-  "sourceCommit": "07cf4c761070abdbe8e69e5bdbf5b38293c60f8f",
+  "sourceCommit": "62e1ad32853da231c3ace1505a87a37922e49519",
   "releasedAt": "2026-11-02",
   "compat": [
     "generic"

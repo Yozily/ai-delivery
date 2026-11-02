@@ -5,11 +5,12 @@
   <产品线>/                    当前版本，滚动更新（保留其中的 README.md 与 releases/）
   <产品线>/releases/<X.Y.Z>/   产品发版时的快照，生成后不再修改
 
-内容一律取自产品仓某个确定提交的 delivery/<产品线>/（git archive），不取工作区。
+内容一律取自产品仓某个确定提交的交付目录（默认 apps/ai-kit/，git archive），不取工作区。
+交付目录中的 README.md（维护说明）不发布。
 
 用法（在发布仓根目录）：
   更新当前版本：
-    python3 _shared/tools/publish.py --source <产品仓路径> --product pgtool \\
+    python3 _shared/tools/publish.py --source <产品仓路径> [--path apps/ai-kit] --product pgtool \\
         --product-version "<产品版本>" [--commit <提交号，默认 HEAD>]
   产品发版时存快照：
     python3 _shared/tools/publish.py --source <产品仓路径> --product pgtool \\
@@ -55,6 +56,7 @@ def extract(data, prefix, target):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--source", required=True, help="产品仓路径")
+    ap.add_argument("--path", default="apps/ai-kit", help="产品仓内的交付目录，默认 apps/ai-kit")
     ap.add_argument("--product", required=True)
     ap.add_argument("--product-version", required=True, help="内容对应的产品版本")
     ap.add_argument("--commit", default="HEAD")
@@ -64,7 +66,7 @@ def main():
 
     src = Path(a.source).resolve()
     commit = git(src, "rev-parse", "--verify", f"{a.commit}^{{commit}}").decode().strip()
-    prefix = f"delivery/{a.product}"
+    prefix = a.path.strip("/")
     if not git(src, "ls-tree", "-d", commit, prefix).strip():
         sys.exit(f"产品仓提交 {commit[:9]} 中不存在 {prefix}/")
     if git(src, "status", "--porcelain", "--", prefix).decode().strip():

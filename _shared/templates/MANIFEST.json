@@ -1,5 +1,5 @@
 {
-  "_comment": "模板：产品仓 delivery/<产品线>/MANIFEST.json 的初始内容；version、productVersion、sourceCommit、releasedAt 由发布工具填写。删除本字段后使用。字段含义见《对外AI交付资产规范》第 4 节。",
+  "_comment": "模板：产品仓交付目录（默认 apps/ai-kit/）中 MANIFEST.json 的初始内容；version、productVersion、sourceCommit、releasedAt 由发布工具填写。删除本字段后使用。字段含义见《对外AI交付资产规范》第 4 节。",
   "product": "<产品线短名，与目录名一致，小写>",
   "version": "current（当前版本）或快照的产品版本号",
   "status": "preview",

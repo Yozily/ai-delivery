@@ -10,15 +10,15 @@
 
 ## 更新当前版本
 
-1. 产品仓 `delivery/<产品线>/` 的改动已提交，记下提交号。
+1. 产品仓交付目录（默认 `apps/ai-kit/`）的改动已提交，记下提交号。
 2. 在本仓根目录：
 
    ```
-   python3 _shared/tools/publish.py --source <产品仓路径> --product <产品线> \
+   python3 _shared/tools/publish.py --source <产品仓路径> [--path apps/ai-kit] --product <产品线> \
        --product-version "<内容对应的产品版本>" --commit <提交号>
    ```
 
-   工具从该提交取内容（不取工作区），替换 `<产品线>/` 下的内容文件，保留 `README.md` 与 `releases/`，并填写 `MANIFEST.json` 的来源提交与日期。
+   工具从该提交取内容（不取工作区），替换 `<产品线>/` 下的内容文件，保留 `README.md` 与 `releases/`（交付目录中的维护说明 `README.md` 不发布），并填写 `MANIFEST.json` 的来源提交与日期。
 3. 能力或适用范围有变化时，更新 `<产品线>/README.md` 与 `INDEX.md`。
 4. 运行 `python3 _shared/tools/validate.py`，必须通过。
 5. 路径限定提交并推送。

@@ -5,7 +5,7 @@
   "productName": "PgTool",
   "productVersion": "v3.0.1 之后的开发构建",
   "sourceRepo": "wac-pgtool",
-  "sourceCommit": "62e1ad32853da231c3ace1505a87a37922e49519",
+  "sourceCommit": "8c005e1e87b8f6d8b8dc12092510349a3292fbb3",
   "releasedAt": "2026-11-02",
   "compat": [
     "generic"
@@ -28,6 +28,6 @@
       }
     ]
   },
-  "notes": "一个产品一个技能；业务域内容在 references/ 下按需读取。本版本只读；云后台暂无接口。AI 需运行在装有 PgTool 的同一台电脑上，并具备 GET 请求能力。",
+  "notes": "当前只读查询与诊断合为一个技能；业务域内容在 references/ 下按需读取。本版本只读；云后台暂无接口。AI 需运行在装有 PgTool 的同一台电脑上，并具备 GET 请求能力。",
   "generatedBy": "_shared/tools/publish.py"
 }

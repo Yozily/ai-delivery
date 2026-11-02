@@ -1,19 +1,4 @@
----
-name: pgtool-flow
-version: 0.4.0
-description: "PgTool 测试流程：查看测试项目、工作流、流程大纲与节点配置；判断某项目在这台电脑上部署的是否为最新内容；给出修改流程参数的建议。用户问「某项目主流程有哪些步骤」「这个节点怎么配置的」「部署的是不是最新」「把某参数改成某值」时使用。不负责：运行状态、能否开测与失败原因（走 pgtool-run）；测试记录（走 pgtool-record）。本版本不直接修改流程。"
-metadata:
-  requires:
-    siblings: ["pgtool-shared"]
-  product: PgTool
-  product-version: "v3.0.1 之后的开发构建"
-  observed-at: "2026-11-02"
-  access: read-only
----
-
-# flow
-
-**CRITICAL — 开始前先读 [`../pgtool-shared/SKILL.md`](../pgtool-shared/SKILL.md)：连接、两端、通用规则、返回与错误。** 没读到时至少遵守：只发 GET；结论附证据；云后台的问题不用本机数据回答。
+# 测试流程
 
 ## 两端
 
@@ -22,16 +7,6 @@ metadata:
 | 客户端 | 测试流程的编辑、发布与部署都在客户端：可读项目、工作流、大纲、节点、部署 |
 | 云后台 | 不涉及 |
 
-## 场景速查
-
-按当前要做的事选行，动手前先读该行的 reference。
-
-| 你要做的事 | 怎么做 | 动手前读 |
-|---|---|---|
-| 看流程有哪些步骤 | 项目 → 工作流列表 → 大纲 → 必要时节点 | [pgtool-flow-read.md](references/pgtool-flow-read.md) |
-| 判断部署的是否为最新内容 | 工作流 `revision` 时间；本机在用的部署；该项目最晚的部署 | [pgtool-flow-deployment.md](references/pgtool-flow-deployment.md) |
-| 改某个步骤的参数 | 定位节点后给出修改建议 | 本页「修改建议」 |
-
 ## 接口（客户端）
 
 路径接在 `http://127.0.0.1:10532` 之后。
@@ -39,7 +14,7 @@ metadata:
 | 用途 | 路径 | 体量 |
 |---|---|---|
 | 项目列表 | `/api/testflow-projects` | 大（每项 200–400KB，含完整流程定义）；裸数组；项目标识字段是 `projectId`，另有 `name`、`description` |
-| 项目中的工作流 | `/api/testflow-projects/{projectId}/workflow-editing/workflows` | 小；`{revision, value}`，`revision` 在顶层 |
+| 项目中的工作流 | `/api/testflow-projects/{projectId}/workflow-editing/workflows` | 小；`{revision, value}`，`revision` 在顶层；`value` 是工作流数组，每项含 `workflowId`、`name`、`isEntry` |
 | 工作流大纲 | `/api/testflow-projects/{projectId}/workflow-editing/outline?workflowId=&depth=` | 小；必须带 `workflowId`；根节点在 `value.root` |
 | 单个节点 | `/api/testflow-projects/{projectId}/workflow-editing/node?workflowId=&nodeId=&view=` | 小；`view` 只能是 `source`（作者填写）、`effective`（生效值）、`origin`（每个值来自哪一层）；配置在 `value.configuration` |
 | 节点类型 | `/api/workflow-editing/node-types?q=&category=`；详情 `/api/workflow-editing/node-types/detail?type=` | 中 |
@@ -64,10 +39,25 @@ metadata:
 2. 给出修改建议：节点 ID 与名称、字段、原值、新值。
 3. 说明修改后需要发布并部署，才会在产线生效；请用户在流程编辑器中修改。
 
-## 意图路由
+## 看流程步骤
 
-| 用户想做什么 | 去哪里 |
-|---|---|
-| 流程步骤、节点配置、部署是否最新、改参数 | 本技能 |
-| 本机当前在运行哪个流程、能否开测、为什么失败 | `pgtool-run` |
-| 某次运行的结果 | `pgtool-record` |
+问题举例：「某项目的主流程有哪些步骤？」
+
+### 步骤
+
+1. **定位项目 ID**（字段 `projectId`）。项目列表很大，常常读不全。用户常用描述性的叫法，不是项目名称。按用户的说法先匹配 `name`，匹配不到再看 `description`。命中多个时（例如只差「并行」后缀的两个版本），列出候选（名称与 ID）；能继续时说明你按哪一个回答，并提醒用户另一个的区别。用户能直接给出项目 ID 时跳过这一步。
+2. **读工作流列表**（工作流在 `value` 中），找到入口工作流（`isEntry: true`）。
+3. **读大纲**：先用 `depth=3` 看规模；如果最深一层仍有 `childCount` 大于 0 而未展开，直接改用 `depth=10` 一次读全。
+4. **跟进派发**：入口工作流常是多层骨架（并行、循环、等待触发、派发），真正的测试步骤在被派发的工作流里（例如「测试调度」）。大纲中 `kind: dispatchWorkflow`（派发）与 `kind: call`（调用）的节点带 `targetWorkflowId`，用它读目标工作流的大纲。不要按名称猜，名称相近的工作流很多。
+5. **排顺序**：步骤顺序按大纲中 `children` 的先后。
+6. **分出收尾**：`catch`（异常收尾）、`finally`（收尾）、`return` 不是测试步骤，单独列为收尾。
+7. `loop` 里套着等待触发，表示每测一台都重新等待触发。
+8. 需要某一步的具体参数时，再用节点接口读该节点，`view=effective`（生效值）。参数值有三种写法：直接值；`[cel]` 开头的表达式；`{op, type, value}` 或 `{op: "slot", …}` 形式的引用（`op: literal` 时 `value` 即值）。
+9. 大纲根节点（`id` 为 `$workflow-root`）的 `name` 可能为空，工作流名称以工作流列表为准。
+
+### 注意
+
+- 项目的 `description` 是作者填写的说明，可能过期；以大纲为准，发现不一致时告诉用户。
+- 不要读整份项目定义来找步骤，用大纲。
+
+程度：可做。

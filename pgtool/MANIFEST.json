@@ -5,7 +5,7 @@
   "productName": "PgTool",
   "productVersion": "v3.0.1 之后的开发构建",
   "sourceRepo": "wac-pgtool",
-  "sourceCommit": "97c9bcbd9e3e61ac3c1bad8158464c06caab67f6",
+  "sourceCommit": "07cf4c761070abdbe8e69e5bdbf5b38293c60f8f",
   "releasedAt": "2026-11-02",
   "compat": [
     "generic"
@@ -13,34 +13,9 @@
   "assets": {
     "skills": [
       {
-        "name": "pgtool-shared",
-        "path": "skills/pgtool-shared/SKILL.md",
-        "purpose": "共享底座：两端（客户端、云后台）与连接、通用与安全规则、返回与错误读法、技能分工；其他技能先读它"
-      },
-      {
-        "name": "pgtool-production",
-        "path": "skills/pgtool-production/SKILL.md",
-        "purpose": "生产现场：当前工单、型号、操作员、产线身份、产品定义与生产配置绑定、系统状态"
-      },
-      {
-        "name": "pgtool-flow",
-        "path": "skills/pgtool-flow/SKILL.md",
-        "purpose": "测试流程：项目、工作流、大纲、节点、部署是否最新、修改建议"
-      },
-      {
-        "name": "pgtool-run",
-        "path": "skills/pgtool-run/SKILL.md",
-        "purpose": "测试运行：会话与执行、工作台、调试、开测前检查、失败诊断"
-      },
-      {
-        "name": "pgtool-record",
-        "path": "skills/pgtool-record/SKILL.md",
-        "purpose": "测试记录与统计：记录检索与读取、本机条数统计、云端统计边界"
-      },
-      {
-        "name": "pgtool-sync",
-        "path": "skills/pgtool-sync/SKILL.md",
-        "purpose": "记录同步：同步队列、失败原因归纳与处理方"
+        "name": "pgtool",
+        "path": "skills/pgtool/SKILL.md",
+        "purpose": "PgTool 查询与诊断：工单与产线身份、流程步骤与部署、开测前检查、失败诊断、测试记录与统计、同步失败原因；客户端与云后台的边界"
       }
     ],
     "mcp": [],
@@ -53,6 +28,6 @@
       }
     ]
   },
-  "notes": "技能套件：skills/ 下的技能需一起安装，pgtool-shared 为共享底座。按业务域划分，每个技能内说明客户端与云后台各能做什么。本版本只读；云后台暂无接口。AI 需运行在装有 PgTool 的同一台电脑上，并具备 GET 请求能力。",
+  "notes": "一个产品一个技能；业务域内容在 references/ 下按需读取。本版本只读；云后台暂无接口。AI 需运行在装有 PgTool 的同一台电脑上，并具备 GET 请求能力。",
   "generatedBy": "_shared/tools/publish.py"
 }

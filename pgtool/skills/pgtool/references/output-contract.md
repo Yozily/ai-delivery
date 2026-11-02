@@ -1,6 +1,6 @@
 # 返回与错误
 
-本页是客户端接口的返回形态、错误形态与通用结果码。各业务域特有的错误码在对应技能中：执行失败码见 `pgtool-run`，同步错误码见 `pgtool-sync`。遇到未列出的码，按其消息字面理解，并在回答中注明「未收录的码」。
+本页是客户端接口的返回形态、错误形态与通用结果码。各业务域特有的错误码在对应参考文件中：执行失败码见 [run.md](run.md)，同步错误码见 [sync.md](sync.md)。遇到未列出的码，按其消息字面理解，并在回答中注明「未收录的码」。
 
 ## 1. 成功返回形态
 
@@ -37,7 +37,7 @@
 | `workflow-v2.production-execution-discovery.recent-not-found` | 404 | 该部署没有最近执行 | 正常，不是故障 |
 | `workflow.runtime.status.current` | 200 | 执行状态读取成功 | 正常 |
 | `production-testing.workflow-debug.snapshot-current` | 200 | 调试快照为当前状态 | 正常 |
-| `workflow-v2.production-configuration.session-binding-not-found` | 409 | 该执行的生产配置会话绑定不存在，工作台与调试快照读不到 | 换诊断路径（见 `pgtool-run`）；作为线索报告 |
+| `workflow-v2.production-configuration.session-binding-not-found` | 409 | 该执行的生产配置会话绑定不存在，工作台与调试快照读不到 | 换诊断路径（见 [run-diagnose.md](run-diagnose.md)）；作为线索报告 |
 | `workflow.runtime.access.ownership_scope_denied` | 未记录 | 当前访问身份无权读取该执行 | 不要重试；作为线索报告，需要时请管理员协助 |
 
 ## 4. 时间

@@ -4,14 +4,14 @@
 
 ## 路径 A：从测试记录出发（最常用）
 
-1. 按 `pgtool-record` 取最近一条记录（`Page=1&PageSize=1`）；需要特定工单时加 `OrderNumber`。
-2. 按 [pgtool-record-read.md](../../pgtool-record/references/pgtool-record-read.md) 读出：结论与失败项（顶层）、测试项状态（`testItemDataCollection`）、错误码与执行标识（`rawEntity`）。
+1. 按 [record.md](record.md) 取最近一条记录（`Page=1&PageSize=1`）；需要特定工单时加 `OrderNumber`。
+2. 按 [record.md](record.md)「读一条记录」读出：结论与失败项（顶层）、测试项状态（`testItemDataCollection`）、错误码与执行标识（`rawEntity`）。
 3. 判断失败性质：
    - `runState: Completed`、`verdict: Failed` 的项是实际判为失败的项。
    - `runState: Cancelled`、`verdict: None` 表示被取消，组按「必需项未通过」判为失败，不是测量超差。
    - 多个测试项在同一时刻被取消，通常是整次运行被中止（推测），根因看判为失败的那一项和 `rawEntity.errorCode`。
    - 有 `passed` 结果的项，可说明哪些步骤已通过。
-4. 看是否稳定复现：取最近几条记录（`PageSize` 不宜超过 10，每条约 200KB 以上），比较失败项与错误码是否相同。
+4. 看是否稳定复现：取最近 3 条记录（`PageSize=3`，约 700KB；不要更多），比较失败项与错误码是否相同。
 5. 需要执行层面的细节时，用 `rawEntity.identity` 进入路径 B。
 
 ## 路径 B：从部署与执行出发
@@ -23,12 +23,19 @@
    - 会话绑定：`state.productionInfo`，即会话启动时绑定的工单、型号、生产配置。全为空表示会话没有绑定工单或生产配置。
    - 能否触发：`state.stations[].actions`、`state.triggers[].actions`（如 `canSubmit`）。
 3. 需要细节时读调试快照：`occurrences` 中的 `failureCode`、`safeMessage`、`cancellationCause`；变量注意 `isRedacted`、`isTruncated`，不猜原值。
-4. 工作台对应常驻会话，不是某一条记录；见 SKILL.md「会话与记录是两条时间线」。
+4. 工作台对应常驻会话，不是某一条记录；见 [run.md](run.md)「核心概念」。
 
 ## 路径 C：死信事件
 
 - `sessionId` 留空取最近事件，可看到未能落库的节点事件、执行 ID 与原因。服务重启后可能为空。
-- 用 `pgtool-flow` 的节点接口读失败节点，把节点 ID 翻译成步骤名称。
+- 用 [flow.md](flow.md) 的节点接口读失败节点，把节点 ID 翻译成步骤名称。
+
+## 用户问「当前」为什么失败
+
+记录与常驻会话的时间线可能分叉：最近一条记录之后，会话工作台里可能还有更晚、但没有生成记录的失败。回答顺序：
+
+1. 先答最近一条记录的失败（有确定的失败项与错误码）。
+2. 再单列工作台中晚于该记录的失败，说明「这些触发没有生成记录」，并按下方组合判读。
 
 ## 组合判读
 

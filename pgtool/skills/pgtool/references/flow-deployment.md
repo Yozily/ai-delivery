@@ -5,9 +5,9 @@
 ## 步骤
 
 1. **项目内容时间**：工作流列表返回体**顶层**的 `revision`（不在每个工作流里），冒号后的时间是内容最后修改时间。不要用项目的 `metadata.updatedAt`，它可能滞后。
-2. **本机实际在用的部署**：没有直接接口，执行类接口又必须先知道部署，所以从记录入手。按 `pgtool-record` 读最近一条测试记录，`sessionId` 形如 `production-test:{deploymentId}:run:{runId}`。再按 `pgtool-run` 用这个部署查活跃执行；有活跃执行（如 `runtimeStatus: Waiting`）是「这台电脑正在用这条部署」的最强证据。
+2. **本机实际在用的部署**：按 [run.md](run.md)「找本机在用的执行」三步得到。有活跃执行（如 `runtimeStatus: Waiting`）是「这台电脑正在用这条部署」的最强证据。
 3. **这条部署属于哪个项目**：读单个部署的 `projectId`。不是用户问的项目时，告诉用户：本机当前在用的是另一个项目。
-4. **用户问的项目的部署**：部署列表按部署 ID 排序，与时间无关，需要在列表中按 `projectId` 筛出后比较 `deployedAt`；传 `projectId`、`limit` 不会报错，但不生效。可对最晚的几条查最近执行，看是否在本机运行过；查到 `recent-not-found` 只说明这几条没运行过，不能推及全部。
+4. **用户问的项目的部署**：部署列表按部署 ID 排序，与时间无关，需要在列表中按 `projectId` 筛出，按 `deployedAt` 取最晚的 3 条即可，不要逐条列出；传 `projectId`、`limit` 不会报错，但不生效。可对最晚的几条查最近执行，看是否在本机运行过；查到 `recent-not-found` 只说明这几条没运行过，不能推及全部。
 5. 历史部署通常也都是 `status: active`，不能用状态挑出当前部署。
 6. 部署的 `definitionHash` 与项目 `revision` 是两套不同的值，不能直接比较，只能比时间。
 
